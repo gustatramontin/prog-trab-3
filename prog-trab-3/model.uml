@@ -1,0 +1,48 @@
+@startuml
+
+title Connect The Stars (Clone) - Class Diagram
+
+
+class Users {
++int id
++String name
++String password
++String img_path
+}
+
+class User_Score {
+  +int user_id
+  +int score_id
+}
+
+class Scores {
++int score_id
++Int score
++Int path_size
+}
+
+class Movies {
+  +int id
+  +String name
+  +String img_path
+}
+
+class Actors {
+  +int id
+  +String name
+  +String img_path
+}
+
+class Movie_Actors {
++int movie_id
++int actor_id
+}
+
+Movie_Actors "1" -down- "1" Movies
+Movie_Actors "1" *-up-"1" Actors
+
+User_Score "1" -down- "1" Users
+User_Score "1" *-up-"1" Scores
+
+
+@enduml
