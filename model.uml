@@ -3,46 +3,42 @@
 title Connect The Stars (Clone) - Class Diagram
 
 
-class Users {
+class User {
 +int id
 +String name
 +String password
 +String img_path
 }
 
-class User_Score {
-  +int user_id
-  +int score_id
+class Score {
++int id
++int score
++User user
++int path_size
++Actor left_actor
++Actor right_actor
 }
 
-class Scores {
-+int score_id
-+Int score
-+Int path_size
-}
-
-class Movies {
+class Movie {
   +int id
   +String name
   +String img_path
 }
 
-class Actors {
+class Actor {
   +int id
   +String name
   +String img_path
 }
 
-class Movie_Actors {
-+int movie_id
-+int actor_id
+class Movie_Cast {
++Movie movie
++Actor actor
 }
 
-Movie_Actors "1" -down- "1" Movies
-Movie_Actors "1" *-up-"1" Actors
+Movie_Cast "1" *-- "1" Movie
+Movie_Cast "1" *--"1" Actor
 
-User_Score "1" -down- "1" Users
-User_Score "1" *-up-"1" Scores
-
+User "1" *-- "n" Score
 
 @enduml
