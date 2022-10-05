@@ -18,8 +18,7 @@ class Score(db.Model):
     
     # método para expressar a pessoa em forma de texto
     def __str__(self):
-        return self.nome + "[id="+str(self.id)+ "], " +\
-            self.email + ", " + self.telefone
+        return f"Score: {self.score}\nPath: {self.path_size}\nUser: {self.user.name}\nActors: {self.left_actor.name}, {self.right_actor.name}"
     # expressao da classe no formato json
     def json(self):
         return {

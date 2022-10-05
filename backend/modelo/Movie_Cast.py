@@ -2,7 +2,7 @@ from geral.config import *
 from modelo.Movie import *
 from modelo.Actor import *
 
-class Movie_Actor(db.Model):
+class Movie_Cast(db.Model):
     # atributos da pessoa
     id = db.Column(db.Integer, primary_key=True)
     
