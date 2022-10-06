@@ -9,5 +9,5 @@ def get_actors():
 
 
     return jsonify({
-        "actors": actors_json
+        "data": actors_json
     })

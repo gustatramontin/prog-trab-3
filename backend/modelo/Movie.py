@@ -13,7 +13,6 @@ class Movie(db.Model):
     def json(self):
         return {
             "id": self.id,
-            "nome": self.nome,
-            "email": self.email,
-            "telefone": self.telefone
+            "nome": self.name,
+            "img_path": self.img_path
         }
