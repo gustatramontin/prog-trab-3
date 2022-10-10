@@ -3,6 +3,9 @@ from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 import os
 
+from hashlib import blake2s
+from base64 import b64encode, b64decode
+
 from flask_cors import CORS # permitir back receber json do front
 
 # configurações
