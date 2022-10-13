@@ -5,6 +5,7 @@ from rotas.movies import *
 from rotas.match import *
 from rotas.incorporate import *
 from rotas.authenticate import *
+from rotas.score import *
 
 @app.route("/")
 def inicio():

@@ -1,0 +1,26 @@
+
+
+body {
+ display: flex;
+ flex-flow: column wrap;
+ align-items: center;
+ min-width: 100vw;
+}
+
+.actors_prompt {
+    display: flex;
+    flex-flow: row nowrap;
+
+    justify-content: space-between;
+    padding: 0 20rem;
+    width: 100vw;
+}
+
+.actor {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.actor img {
+    height: 20rem;
+}

@@ -1,8 +1,8 @@
 from geral.config import *
 from modelo.User import *
 
-@app.route("/api/create_score")
-def create_score(name, password):
+@app.route("/api/create_score", methods=["post"])
+def create_score():
     score_data = request.get_json()
 
     """
@@ -19,19 +19,23 @@ def create_score(name, password):
             }
         ]
 
+        "left_actor": id1,
+        "right_actor": id2,
+         
+
         "authentication_token": z
     }
     
     """
 
-    score_data["history"]
+    token = score_data["data"]["authentication_token"]
 
-    secured_key = blake2s(password.encode("utf-8")).hexdigest()
+    if not verify_token(token):
+        return jsonify({
+            "data": False
+        })
 
-    the_new_member = User(name=name, password=secured_key, img_path=None)
-
-    db.session.add(the_new_member)
-    db.session.commit()
+    history = score_data["data"]["history"]   
 
     return jsonify({
         "data": True

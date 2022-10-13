@@ -21,14 +21,11 @@ def authenticate_user(name, password):
                 "status": False
             } 
         })
-
-    token = f"{the_user.name}.{1671937200}"
-    encrypted_token = b64encode(token.encode("utf-8")).decode("utf-8")
-
+    token = generate_token(the_user)
 
     return jsonify({
         "data": {
             "status": True,
-            "token": encrypted_token
+            "token": token
         }
     })
