@@ -16,9 +16,9 @@ def run():
         telefone = "47 98822 2531")        
     """
     
-    a1 = Actor(name="Joaquin Phoenix", img_path="somewhere")
-    a2 = Actor(name="Robert Downey Jr", img_path="somewhere")
-    a3 = Actor(name="Chris Evans", img_path="somewhere")
+    a1 = Actor(name="Joaquin Phoenix", img_path="https://upload.wikimedia.org/wikipedia/commons/d/d1/Joaquin_Phoenix_in_2018.jpg")
+    a2 = Actor(name="Robert Downey Jr", img_path="https://upload.wikimedia.org/wikipedia/commons/d/d3/Robert_Downey%2C_Jr._2012.jpg")
+    a3 = Actor(name="Chris Evans", img_path="https://upload.wikimedia.org/wikipedia/commons/8/89/Chris_Evans_2020_%28cropped%29.jpg")
     
     m1 = Movie(name="Avengers", img_path="somewhere movies")
     m2 = Movie(name="Joker", img_path="somewhere movies")

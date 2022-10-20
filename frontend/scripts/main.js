@@ -1,12 +1,17 @@
 
 function on_actor_input_typing(input_element) {
+    const actor = Properties.get_actor_by_name(input_element.value)
+    if (!actor)
+        return
 
+    input_element.parentElement.querySelector("img").src = actor.img_path
 }
 
 class Actor {
-    constructor(name, id) {
+    constructor(name, id, img_path) {
         this.name = name
         this.id = id
+        this.img_path = img_path
     }
 }
 
@@ -26,7 +31,16 @@ class PropertiesClass {
 
     }
     set_actors(actor_array) {
-        this.actors = actor_array.map(el => new Actor(el.name, el.id))
+        this.actors = actor_array.map(el => new Actor(el.name, el.id, el["image path"]))
+    }
+
+    get_actor_by_name(name) {
+        const actor = this.actors.filter(el => el.name == name)[0]
+
+        if (actor)
+            return actor
+        
+        return null
     }
     set_movies(movies_array) {
         this.movies = movies_array.map(el => new Movie(el.name, el.id))
@@ -61,11 +75,15 @@ function fetch_metadata() {
 }
 
 function start_game() {
-    const actor_1 = document.querySelector("#actor_input_1")
+    const actor_1 = document.querySelector("#actor_input_1").value
+    const actor_2 = document.querySelector("#actor_input_2").value
+
+    const actor_id_1 = Properties.get_actor_by_name(actor_1).id
+    const actor_id_2 = Properties.get_actor_by_name(actor_2).id
 
     console.log(actor_1.value)
 
-    window.location.pathname = `game.html?actor_1=${actor_1}&actor_2=${actor_2}`
+    window.location.href = `./game.html?actor_1=${actor_id_1}&actor_2=${actor_id_2}`
 }
 
 fetch_metadata()
