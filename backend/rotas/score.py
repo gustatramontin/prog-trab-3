@@ -1,6 +1,8 @@
 from geral.config import *
 from modelo.User import *
 
+# $ curl localhost:5000/api/create_score -X POST -d '{ "data": { "history": [], "authentication_token": "your token here" } }'
+
 @app.route("/api/create_score", methods=["post"])
 def create_score():
     score_data = request.get_json()

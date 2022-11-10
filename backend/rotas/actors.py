@@ -1,6 +1,8 @@
 from geral.config import *
 from modelo.Actor import *
 
+# $ curl localhost:5000/api/actors
+
 @app.route("/api/actors")
 def get_actors():
 

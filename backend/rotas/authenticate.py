@@ -1,6 +1,8 @@
 from geral.config import *
 from modelo.User import *
 
+# $ curl localhost:5000/api/authenticate/username/password
+
 @app.route("/api/authenticate/<string:name>/<string:password>")
 def authenticate_user(name, password):
 

@@ -1,6 +1,8 @@
 from geral.config import *
 from modelo.Movie_Cast import *
 
+# $ curl localhost:5000/api/match/?/?
+
 @app.route("/api/match/<int:movie_id>/<int:actor_id>")
 def is_it_a_match(movie_id, actor_id):
 

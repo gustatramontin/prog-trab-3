@@ -1,6 +1,8 @@
 from geral.config import *
 from modelo.Movie import *
 
+# $ curl localhost:5000/api/movies
+
 @app.route("/api/movies")
 def get_movies():
 
