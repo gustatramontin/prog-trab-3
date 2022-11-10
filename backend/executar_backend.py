@@ -9,6 +9,6 @@ from rotas.score import *
 
 @app.route("/")
 def inicio():
-    return 'backend operante, operação de editar'
+    return 'Bienvenue dans mon backend, le lien de le github est: https://github.com/gustatramontin/prog-trab-3 '
 
-app.run(debug=True)
+app.run(debug=True, host="0.0.0.0")
