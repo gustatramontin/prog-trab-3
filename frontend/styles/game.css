@@ -1,0 +1,14 @@
+#game {
+    display: flex;
+}
+
+#game .item {
+    width: 10rem;
+    position: relative;
+    
+    border: 1px rgba(0, 0, 0, 0.137) solid;
+}
+
+#game .item img {
+    width: inherit;
+}
