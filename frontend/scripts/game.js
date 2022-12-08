@@ -34,11 +34,24 @@ class View {
          })
        }
 
-       check_win()
+       console.log(this.check_win())
     }
 
-    check_win() {
-      
+    check_win(line_number=0) {
+      const is_actor_2_index = line => (line.item_1_index == 1 || line.item_2_index == 1)
+      const line_number_list = this.lines.filter(line => line.item_1_index == line_number || line.item_2_index == line_number)
+      const is_a_win = line_number_list.filter(is_actor_2_index).length > 0
+
+      if (is_a_win)
+        return true
+      else if (line_number.length > 0) {
+        line_number.forEach(item => {
+          const node = Math.max(item.item_1_index, item.item_2_index)
+          this.check_win(node)
+        })
+      }
+      else
+        return false
     }
 
     async check_match(actor_id, movie_id) {
