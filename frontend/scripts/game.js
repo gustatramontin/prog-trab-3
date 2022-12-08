@@ -1,25 +1,51 @@
-class View {
-    constructor() {
-        this.screen = document.querySelector("#game")
-        this.items = []
+import {PropertiesClass, URL} from "./main.js"
 
-        this.canvas = document.querySelector("#canvas")
-        this.canvas.width = innerWidth
-        this.canvas.height = innerHeight
-        this.ctx = this.canvas.getContext("2d")
-        this.ctx.moveTo(0, 0);
-        this.ctx.lineTo(200, 100);
-        this.ctx.stroke();
+class View {
+  constructor() {
+    this.screen = document.querySelector("#game")
+    this.items = []
+    this.lines = []
+    
+    this.actor_1;
+    this.actor_2;
+
+    this.canvas = document.querySelector("#canvas")
+    this.canvas.width = innerWidth
+    this.canvas.height = innerHeight
+    this.ctx = this.canvas.getContext("2d")
     }
 
-    add_item(name, image) {
+    add_item(item_object) {
 
-       const item = new Item(name, image)
+       const item = new Item(item_object.name, item_object.img_path, item_object.id, item_object.type)
        this.screen.appendChild(item.element)
 
-       this.lines = []
-
+       
        this.items.push(item)
+       if (item_object.type == "movie") {
+         this.items.forEach(async (item, index) => {
+          if (item.type !== "actor") return
+          console.log(item_object, item)
+          const its_match = await this.check_match(item_object.id, item.id)
+          if (its_match) {
+            console.log("match", its_match)
+            this.connect_items(index, this.items.length-1)
+          }
+         })
+       }
+
+       check_win()
+    }
+
+    check_win() {
+      
+    }
+
+    async check_match(actor_id, movie_id) {
+      const result = await fetch(URL(`match/${movie_id}/${actor_id}`))
+      const result_json = await result.json()
+
+      return result_json.data
     }
 
     create_line(x,y, destination_x, destination_y) {
@@ -27,7 +53,6 @@ class View {
         this.ctx.lineTo(destination_x, destination_y);
         this.ctx.stroke();
 
-        console.log(x,y, destination_x, destination_y)
     }
 
     get_element_pos(el) {
@@ -60,10 +85,11 @@ class View {
 }
 
 class Item {
-    constructor(name, image) {
+    constructor(name, image, id, type) {
         this.element = document.createElement("div")
         this.element.classList.add("item")
-
+        this.id = id
+        this.type = type
         this.postion_left = 0
         this.postion_top = 0
 
@@ -94,15 +120,66 @@ class Item {
         this.postion_top += e.movementY
         this.element.style.left = this.postion_left + "px"
         this.element.style.top = this.postion_top + "px"
-        console.log(e.movementY)
 
         view.update_lines()
 
     }
 }
 
-const view = new View()
+class Input {
+  constructor() {
+    const element = document.querySelector("#input")
 
-view.add_item("Roger", "https://pbs.twimg.com/media/B_g-vHDWEAAWUTI.png")
-view.add_item("James", "https://pbs.twimg.com/media/B_g-vHDWEAAWUTI.png")
-view.add_item("Paul", "https://pbs.twimg.com/media/B_g-vHDWEAAWUTI.png")
+    element.oninput = this.ontype
+  }
+  
+  set_options() {
+    const datalist = document.querySelector("#movies_actor_list")
+    Properties.actors.forEach(actor => {
+      datalist.innerHTML += `<option value="${actor.name}">`
+    })
+    Properties.movies.forEach(movie => {
+      console.log(movie)
+      datalist.innerHTML += `<option value="${movie.name}">`
+    })
+    
+  }
+
+  ontype(e) {
+    const input_value = e.target.value
+    const actor = Properties.get_actor_by_name(input_value)
+    const movie = Properties.get_movie_by_name(input_value)
+
+    if (actor) {
+      view.add_item(actor)
+    } else if (movie) {
+      view.add_item(movie)
+    }
+  }
+}
+
+const input = new Input()
+const view = new View()
+const Properties = new PropertiesClass();
+
+
+
+(async function () {
+  await Properties.fetch_metadata();
+  
+  input.set_options()
+  const url_params = new URLSearchParams(window.location.search)
+  const actor_1_id = url_params.get("actor_1")
+  const actor_2_id = url_params.get("actor_2")
+  
+  const actor_1 = Properties.get_actor_by_id(actor_1_id)
+  const actor_2 = Properties.get_actor_by_id(actor_2_id)
+
+  view.actor_1 = actor_1
+  view.actor_2 = actor_2
+
+  view.add_item(view.actor_1)
+  view.add_item(view.actor_2)
+})();
+
+console.log(actor_1, actor_2)

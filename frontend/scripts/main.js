@@ -12,6 +12,7 @@ class Actor {
         this.name = name
         this.id = id
         this.img_path = img_path
+        this.type = "actor"
     }
 }
 
@@ -19,18 +20,20 @@ class Movie {
     constructor(name, id) {
         this.name = name
         this.id = id
+        this.type = "movie"
     }
 }
 
 
 
-class PropertiesClass {
+export class PropertiesClass {
     constructor() {
         this.actors
         this.movies
-
+        
     }
     set_actors(actor_array) {
+        console.log(typeof actor_array)
         this.actors = actor_array.map(el => new Actor(el.name, el.id, el["image path"]))
     }
 
@@ -39,17 +42,48 @@ class PropertiesClass {
 
         if (actor)
             return actor
-        
+            
         return null
+    }
+
+    get_actor_by_id(id) {
+        const actor = this.actors.filter(el => el.id == id)[0]
+
+        if (actor)
+            return actor
+            
+        return null
+
+    }
+
+    get_movie_by_name(name) {
+        const movie = this.movies.filter(el => el.name == name)[0]
+
+        if (movie)
+            return movie
+            
+        return null
+        
     }
     set_movies(movies_array) {
         this.movies = movies_array.map(el => new Movie(el.name, el.id))
     }
+    
+    async fetch_metadata() {
+        
+        await fetch(URL("actors")).then(request => request.json()).then(actors => {
+            this.set_actors(actors.data)
+        })
+        
+        await fetch(URL("movies")).then(request => request.json()).then(movies => {
+            console.log(movies.data)
+            this.set_movies(movies.data)
+        })
+    
+    }
 }
 
-const Properties = new PropertiesClass()
-
-const URL = (route) => `http://localhost:5000/api/${route}`
+export const URL = (route) => `http://localhost:5000/api/${route}`
 
 function update_actors_option_list(actors_array) {
     const datalist = document.querySelector("#actors_list")
@@ -58,32 +92,3 @@ function update_actors_option_list(actors_array) {
         datalist.innerHTML += `<option value="${actor_name}">`
     });
 }
-
-function fetch_metadata() {
-    
-    fetch(URL("actors")).then(request => request.json()).then(actors => {
-        console.log(actors.data)
-        Properties.set_actors(actors.data)
-        console.log(Properties.actors)
-        update_actors_option_list(actors.data)
-    })
-
-    fetch(URL("movies")).then(request => request.json()).then(movies => {
-        Properties.set_movies(movies)
-    })
-
-}
-
-function start_game() {
-    const actor_1 = document.querySelector("#actor_input_1").value
-    const actor_2 = document.querySelector("#actor_input_2").value
-
-    const actor_id_1 = Properties.get_actor_by_name(actor_1).id
-    const actor_id_2 = Properties.get_actor_by_name(actor_2).id
-
-    console.log(actor_1.value)
-
-    window.location.href = `./game.html?actor_1=${actor_id_1}&actor_2=${actor_id_2}`
-}
-
-fetch_metadata()
