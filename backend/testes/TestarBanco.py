@@ -22,7 +22,8 @@ def run():
         movies.append(movie_obj)
         cast = json.loads(movie["cast"])
         for actor in cast:
-            actors[int(actor["id"])] = Actor(name=actor["name"], img_path="")
+            if not actors.get(actor["id"]):
+                actors[actor["id"]] = Actor(name=actor["name"], img_path="")
 
             movie_cast = Movie_Cast(movie=movie_obj, actor=actors[actor["id"]])
             movies_cast.append(movie_cast)

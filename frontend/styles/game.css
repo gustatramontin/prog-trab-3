@@ -17,7 +17,9 @@
 
 #game .item {
     width: 10rem;
+    margin: 1rem;
     position: relative;
+    user-select: none;
     
     border: 1px rgba(0, 0, 0, 0.137) solid;
 }

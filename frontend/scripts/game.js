@@ -18,43 +18,81 @@ class View {
     add_item(item_object) {
 
        const item = new Item(item_object.name, item_object.img_path, item_object.id, item_object.type)
-       this.screen.appendChild(item.element)
-
+       this.screen.insertBefore(item.element, this.screen.children[1])
+      console.log(item_object)
        
-       this.items.push(item)
+       this.items.push(item);
        if (item_object.type == "movie") {
-         this.items.forEach(async (item, index) => {
-          if (item.type !== "actor") return
-          console.log(item_object, item)
-          const its_match = await this.check_match(item_object.id, item.id)
-          if (its_match) {
+        (async function() {
+          let index = -1
+          for (let item of this.items) {
+            index++
+            if (item.type !== "actor") continue
+            console.log(item_object, item)
+            const its_match = await this.check_match(item_object.id, item.id)
             console.log("match", its_match)
-            this.connect_items(index, this.items.length-1)
+            if (its_match) {
+              this.connect_items(index, this.items.length-1)
+            
           }
-         })
+         }
+
+        }).bind(this)().then(() => {
+
+          if (this.check_win())
+            alert("you won")
+        });
+       } else if (item_object.type == "actor") {
+         (async function() {
+           console.log("actor", this.items);
+           let index = -1
+           for (let item of this.items) {
+             index++
+             console.log(item_object, item)
+             if (item.type !== "movie") continue
+            const its_match = await this.check_match(item.id, item_object.id)
+            console.log("match", its_match)
+            if (its_match) {
+              this.connect_items(index, this.items.length-1)
+            
+          }
+         }
+
+        }).bind(this)().then(() => {
+
+          if (this.check_win())
+            alert("you won")
+        });
        }
 
-       console.log(this.check_win())
     }
 
-    check_win(line_number=0) {
-      const is_actor_2_index = line => (line.item_1_index == 1 || line.item_2_index == 1)
-      const line_number_list = this.lines.filter(line => line.item_1_index == line_number || line.item_2_index == line_number)
+    check_win(line_number=0, not_again_list=[0]) {
+      const is_actor_2_index = line => (line.item_1 == 1 || line.item_2 == 1)
+      const line_number_list = this.lines.filter(line => line.item_1 == line_number || line.item_2 == line_number)
       const is_a_win = line_number_list.filter(is_actor_2_index).length > 0
-
       if (is_a_win)
         return true
-      else if (line_number.length > 0) {
-        line_number.forEach(item => {
-          const node = Math.max(item.item_1_index, item.item_2_index)
-          this.check_win(node)
-        })
+      else if (line_number_list.length > 0) {
+        for (let item of line_number_list) {
+          
+          let node;
+          if (!not_again_list.includes(item.item_1)){
+
+            node = item.item_1
+          } else if (!not_again_list.includes(item.item_2)) {
+            node = item.item_2
+          } else
+            return false
+          
+          if (this.check_win(node, [...not_again_list, node])) return true
+        }
       }
       else
         return false
     }
 
-    async check_match(actor_id, movie_id) {
+    async check_match(movie_id, actor_id) {
       const result = await fetch(URL(`match/${movie_id}/${actor_id}`))
       const result_json = await result.json()
 
@@ -109,7 +147,7 @@ class Item {
         this.ismousedown = false
         this.element.innerHTML = `
             <h2>${name}</h2>
-            <img src="${image}">
+            <img src="${image}" draggable="false">
        `
 
        this.element.addEventListener("mousedown", (e) => this.onmousedown(e))
@@ -148,14 +186,22 @@ class Input {
   
   set_options() {
     const datalist = document.querySelector("#movies_actor_list")
+    let options = document.createDocumentFragment()
     Properties.actors.forEach(actor => {
-      datalist.innerHTML += `<option value="${actor.name}">`
-    })
-    Properties.movies.forEach(movie => {
-      console.log(movie)
-      datalist.innerHTML += `<option value="${movie.name}">`
+      const option_el = document.createElement("option")
+      option_el.value = actor.name
+      options.appendChild(option_el)
+      //datalist.innerHTML += `<option value="${actor.name}">`
     })
     
+    Properties.movies.forEach(movie => {
+      const option_el = document.createElement("option")
+      option_el.value = movie.name
+      options.appendChild(option_el)
+      //datalist.innerHTML += `<option value="${movie.name}">`
+    })
+    
+    datalist.appendChild(options)
   }
 
   ontype(e) {

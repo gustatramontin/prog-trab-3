@@ -74,9 +74,9 @@ export class PropertiesClass {
         await fetch(URL("actors")).then(request => request.json()).then(actors => {
             this.set_actors(actors.data)
         })
+        console.log(this.actors)
         
         await fetch(URL("movies")).then(request => request.json()).then(movies => {
-            console.log(movies.data)
             this.set_movies(movies.data)
         })
     
@@ -84,11 +84,3 @@ export class PropertiesClass {
 }
 
 export const URL = (route) => `http://localhost:5000/api/${route}`
-
-function update_actors_option_list(actors_array) {
-    const datalist = document.querySelector("#actors_list")
-    actors_array.forEach(actor => {
-        const actor_name = actor.name
-        datalist.innerHTML += `<option value="${actor_name}">`
-    });
-}
